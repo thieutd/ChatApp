@@ -1,0 +1,13 @@
+#pragma once
+
+#include <QLatin1StringView>
+
+namespace Client {
+    constexpr QLatin1StringView Name{"@PROJECT_NAME@"};
+    constexpr QLatin1StringView Version{"v@PROJECT_VERSION@"};
+    constexpr int VersionMajor{ @PROJECT_VERSION_MAJOR@ };
+    constexpr int VersionMinor{ @PROJECT_VERSION_MINOR@ };
+    constexpr int VersionPatch{ @PROJECT_VERSION_PATCH@ };
+    constexpr QLatin1StringView AppName{"@PROJECT_NAME@ v@PROJECT_VERSION@"};
+    constexpr QLatin1StringView UserAgent{"@PROJECT_NAME@/@PROJECT_VERSION@"};
+}

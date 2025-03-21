@@ -1,0 +1,5 @@
+<RCC>
+    <qresource prefix="/">
+        <file>schemas/sqlite_db_create.sql</file>
+    </qresource>
+</RCC>
