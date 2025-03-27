@@ -17,30 +17,13 @@ public:
     virtual void unapply(QNetworkRequestFactory &requestFactory) const = 0;
 };
 
-class BasicAuthStrategy : public AuthStrategy
+class AuthStrategyFactory
 {
 public:
-    BasicAuthStrategy(QString username, QString password);
-    constexpr AuthType type() const override;
-    void apply(QNetworkRequestFactory &requestFactory) const override;
-    void unapply(QNetworkRequestFactory &requestFactory) const override;
-
-private:
-    QString username;
-    QString password;
+    template<AuthType authType, typename... Args>
+    static std::shared_ptr<AuthStrategy> create(Args &&...args);
 };
 
-class JwtAuthStrategy : public AuthStrategy
-{
-public:
-    explicit JwtAuthStrategy(QByteArray token);
-    ~JwtAuthStrategy() override;
-    constexpr AuthType type() const override { return AuthType::Jwt; }
-    void apply(QNetworkRequestFactory &requestFactory) const override;
-    void unapply(QNetworkRequestFactory &requestFactory) const override;
-
-private:
-    QByteArray token;
-};
+#include "authstrategy.inl"
 
 #endif // AUTHSTRATEGY_H

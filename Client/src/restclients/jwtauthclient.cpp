@@ -32,7 +32,8 @@ void JwtAuthClient::login(const QString &username, const QString &password)
             refreshToken = json["refresh_token"].toString();
 
             emit loggedIn();
-            emit accessTokenChanged(std::make_shared<JwtAuthStrategy>(std::move(accessToken)),
+            emit accessTokenChanged(AuthStrategyFactory::create<AuthType::Jwt>(
+                                        std::move(accessToken)),
                                     QDateTime::fromSecsSinceEpoch(expiry));
         } else {
             defaultFailedRequestEmitter(*this, &JwtAuthClient::loginFailed, std::move(reply));
@@ -69,7 +70,8 @@ void JwtAuthClient::refresh()
             // Create new auth strategy with refreshed token
             auto accessToken = json["access_token"].toString().toUtf8();
             auto expiry = json["access_expiration"].toInteger();
-            emit accessTokenChanged(std::make_shared<JwtAuthStrategy>(std::move(accessToken)),
+            emit accessTokenChanged(AuthStrategyFactory::create<AuthType::Jwt>(
+                                        std::move(accessToken)),
                                     QDateTime::fromSecsSinceEpoch(expiry));
         } else {
             defaultFailedRequestEmitter(*this, &JwtAuthClient::refreshFailed, std::move(reply));

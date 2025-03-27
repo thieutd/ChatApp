@@ -4,7 +4,7 @@
 #include "restclientbase.h"
 #include "typedefs.h"
 
-class JwtAuthStrategy;
+class AuthStrategy;
 
 class JwtAuthClient : public RestClientBase
 {
@@ -25,7 +25,7 @@ signals:
     void loggedIn();
     void loggedOut();
     void registered();
-    void accessTokenChanged(const std::shared_ptr<const JwtAuthStrategy> &authStrategy,
+    void accessTokenChanged(const std::shared_ptr<const AuthStrategy> &authStrategy,
                             const QDateTime &expiry);
 
     void loginFailed(const AuthRequestError &error);
