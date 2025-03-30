@@ -6,12 +6,12 @@ on:
   push:
     branches: [ "main" ]
     paths:
-      - 'Server/**'
+      - 'Server/Drogon/**'
       - '.github/workflows/**'
   pull_request:
     branches: [ "main" ]
     paths:
-      - 'Server/**'
+      - 'Server/Drogon/**'
       - '.github/workflows/**'
 
 jobs:
@@ -66,7 +66,7 @@ jobs:
       shell: bash
       run: |
         echo "build-output-dir=${{ github.workspace }}/build" >> "$GITHUB_OUTPUT"
-        echo "server-source-dir=${{ github.workspace }}/Server" >> "$GITHUB_OUTPUT"
+        echo "server-source-dir=${{ github.workspace }}/Server/Drogon" >> "$GITHUB_OUTPUT"
 
     - name: Fix permission denied during patching
       if: matrix.os == 'ubuntu-latest'
@@ -85,7 +85,7 @@ jobs:
         -DBUILD_SHARED_LIBS=${{ matrix.shared_libs }}
         -DVCPKG_TARGET_TRIPLET=${{ matrix.vcpkg_triplet }}
         -DVCPKG_BUILD_TYPE=${{ matrix.build_type }}
-        -S '${{ github.workspace }}/Server'
+        -S '${{ github.workspace }}/Server/Drogon'
 
     - name: Build
       # Build your program with the given configuration. Note that --config is needed because the default Windows generator is a multi-config generator (Visual Studio generator).

@@ -61,20 +61,8 @@ constexpr std::array kUserCreationByAdminArray = ClearFields(kUserFieldsArray, {
 constexpr std::array kUserUpdateFieldsArray = ClearFields(kUserFieldsArray, {"id", "role", "created_at", "deleted_at"});
 constexpr std::array kUserUpdateByAdminFieldsArray = ClearFields(kUserFieldsArray, {"id", "created_at", "deleted_at"});
 
-// Room table fields
-constexpr std::array kRoomFieldsArray = {"id",         "name",       "type",       "description",
-                                         "avatar_url", "created_at", "deleted_at", "last_message_id"};
-
-constexpr std::array kRoomCreationFieldsArray = ClearFields(kRoomFieldsArray, {"id", "type", "created_at", "deleted_at"});
-constexpr std::array kRoomInfoFieldsArray = ClearFields(kRoomFieldsArray, {"deleted_at", "last_message_id"});
-
 constexpr std::array kCommonRoomsViewFieldsArray = {"user1_id",    "user2_id",   "id",        "name",
                                                     "description", "avatar_url", "created_at"};
 constexpr std::array kCommonRoomsViewResultFieldsArray =
     ClearFields(kCommonRoomsViewFieldsArray, {"user1_id", "user2_id"});
-
-constexpr std::array kJoinedRoomsViewFieldsArray = {"user_id",    "id",         "name", "description",
-                                                    "avatar_url", "created_at", "role", "joined_at"};
-constexpr std::array kJoinedRoomsViewResultFieldsArray =
-    ClearFields(kJoinedRoomsViewFieldsArray, {"user_id", "role", "joined_at"});
 } // namespace server::models::internal

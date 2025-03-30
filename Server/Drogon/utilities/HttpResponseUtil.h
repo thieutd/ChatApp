@@ -90,7 +90,7 @@ template <HttpErrorCode error_code, typename... Args> HttpResponsePtr NewHttpErr
     }
 }
 
-template<typename JsonValue>
+template <typename JsonValue = Json::Value>
 HttpResponsePtr NewJsonResponse(JsonValue &&json_value, const HttpStatusCode status_code = k200OK)
 {
     auto resp = HttpResponse::newHttpJsonResponse(std::forward<JsonValue>(json_value));

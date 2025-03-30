@@ -39,7 +39,7 @@
       }]
     },
     "relationships": {
-        "enabled": true,
+        "enabled": false,
         "items": [
           {
             "type": "many to many",

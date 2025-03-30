@@ -133,28 +133,6 @@ Task<HttpResponsePtr> Users::GetList(const HttpRequestPtr req)
     CoroMapper<User> mapper{app().getDbClient()};
     
     const auto &parameters = req->parameters();
-    if (const auto it = parameters.find("sort"); it != parameters.end())
-    {
-        for (auto sort_fields = utils::splitString(it->second, ","); auto &field : sort_fields)
-        {
-            if (field.empty())
-                continue;
-            if (field[0] == '+')
-            {
-                field = field.substr(1);
-                mapper.orderBy(field, SortOrder::ASC);
-            }
-            else if (field[0] == '-')
-            {
-                field = field.substr(1);
-                mapper.orderBy(field, SortOrder::DESC);
-            }
-            else
-            {
-                mapper.orderBy(field, SortOrder::ASC);
-            }
-        }
-    }
 
     size_t offset = 0;
     if (const auto it = parameters.find("offset"); it != parameters.end())
@@ -190,18 +168,6 @@ Task<HttpResponsePtr> Users::GetList(const HttpRequestPtr req)
         criteria = criteria && Criteria{User::Cols::_username, CompareOperator::Like, it->second};
     }
 
-    // if (const auto &json_ptr = req->jsonObject(); json_ptr && json_ptr->isMember("filter"))
-    // {
-    //     try
-    //     {
-    //         criteria_opt = makeCriteria((*json_ptr)["filter"]);
-    //     }
-    //     catch (const std::exception &e)
-    //     {
-    //         LOG_ERROR << e.what();
-    //         co_return utilities::NewJsonErrorResponse(k400BadRequest, "Invalid filter");
-    //     }
-    // }
 
     try
     {
@@ -256,15 +222,108 @@ Task<HttpResponsePtr> Users::GetList(const HttpRequestPtr req)
 
 Task<HttpResponsePtr> Users::UpdateOne(const HttpRequestPtr req, const User::PrimaryKeyType id)
 {
-    co_return utilities::NewJsonErrorResponse(k501NotImplemented);
+    CoroMapper<User> mapper{app().getDbClient()};
+    
+    const auto &json_ptr = req->jsonObject();
+    if (!json_ptr)
+    {
+        co_return utilities::NewJsonErrorResponse<HttpErrorCode::kNoJsonObjectError>();
+    }
+
+    std::string err;
+    if (!User::validateMasqueradedJsonForUpdate(*json_ptr, models::kUserUpdateByAdminFields, err))
+    {
+        co_return utilities::NewJsonErrorResponse(k400BadRequest, err);
+    }
+
+    User user{*json_ptr, models::kUserUpdateByAdminFields};
+    user.setId(id);
+
+    if (user.getPassword())
+    {
+        auto password_hashing_result = app().getPlugin<PasswordHasher>()->HashPassword(user.getValueOfPassword());
+        if (!password_hashing_result)
+        {
+            LOG_ERROR << fmt::format("{}", password_hashing_result.error());
+            co_return utilities::NewJsonErrorResponse<HttpErrorCode::kInternalServerError>(
+                "Failed to hash password", password_hashing_result.error());
+        }
+        user.setPassword(std::move(password_hashing_result).value());
+    }
+
+    try
+    {
+        co_await mapper.update(user);
+        co_return HttpResponse::newHttpJsonResponse(makeJson(req, user));
+    }
+    catch (DrogonDbException &e)
+    {
+        LOG_ERROR << e.base().what();
+        co_return utilities::NewJsonErrorResponse<HttpErrorCode::kDatabaseError>();
+    }
 }
 
 Task<HttpResponsePtr> Users::UpdateCurrent(const HttpRequestPtr req)
 {
-    co_return utilities::NewJsonErrorResponse(k501NotImplemented);
+    CoroMapper<User> mapper{app().getDbClient()};
+
+    const auto &json_ptr = req->jsonObject();
+    if (!json_ptr)
+    {
+        co_return utilities::NewJsonErrorResponse<HttpErrorCode::kNoJsonObjectError>();
+    }
+
+    const auto user_id = req->getAttributes()->get<User::PrimaryKeyType>("id");
+
+    std::string err;
+    if (!User::validateMasqueradedJsonForUpdate(*json_ptr, models::kUserUpdateFields, err))
+    {
+        co_return utilities::NewJsonErrorResponse(k400BadRequest, err);
+    }
+
+    User user{*json_ptr, models::kUserUpdateFields};
+    user.setId(user_id);
+
+    if (user.getPassword())
+    {
+        auto password_hashing_result = app().getPlugin<PasswordHasher>()->HashPassword(user.getValueOfPassword());
+        if (!password_hashing_result)
+        {
+            LOG_ERROR << fmt::format("{}", password_hashing_result.error());
+            co_return utilities::NewJsonErrorResponse<HttpErrorCode::kInternalServerError>();
+        }
+        user.setPassword(std::move(password_hashing_result).value());
+    }
+
+    try
+    {
+        co_await mapper.update(user);
+        co_return HttpResponse::newHttpJsonResponse(makeJson(req, user));
+    }
+    catch (DrogonDbException &e)
+    {
+        LOG_ERROR << e.base().what();
+        co_return utilities::NewJsonErrorResponse<HttpErrorCode::kDatabaseError>();
+    }
+
 }
 
 Task<HttpResponsePtr> Users::DeleteOne(const HttpRequestPtr req, const User::PrimaryKeyType id)
 {
-    co_return utilities::NewJsonErrorResponse(k501NotImplemented);
+    CoroMapper<User> mapper{app().getDbClient()};
+    const auto user_id = req->getAttributes()->get<User::PrimaryKeyType>("id");
+    try
+    {
+        co_await mapper.deleteByPrimaryKey(id);
+        Json::Value ret;
+        ret["message"] = "User deleted";
+        LOG_INFO << fmt::format("User {} deleted by {}", id, user_id);
+        co_return utilities::NewJsonResponse(std::move(ret));
+    }
+    catch (DrogonDbException &e)
+    {
+        LOG_ERROR << e.base().what();
+        co_return utilities::NewJsonErrorResponse<HttpErrorCode::kDatabaseError>("Failed to delete user",
+                                                                                 e.base().what());
+    }
 }

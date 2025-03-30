@@ -14,15 +14,12 @@ const std::vector<std::string> kUserFields{std::begin(internal::kUserFieldsArray
 const std::vector<std::string> kUserRegistrationFields{std::begin(internal::kUserRegistrationFieldsArray), std::end(internal::kUserRegistrationFieldsArray)};
 const std::vector<std::string> kUserInfoFields{std::begin(internal::kUserInfoFieldsArray), std::end(internal::kUserInfoFieldsArray)};
 const std::vector<std::string> kUserRedisInfoFields{std::begin(internal::kUserRedisInfoFieldsArray), std::end(internal::kUserRedisInfoFieldsArray)};
+const std::vector<std::string> kUserUpdateFields{std::begin(internal::kUserUpdateFieldsArray),
+                                                      std::end(internal::kUserUpdateFieldsArray)};
 const std::vector<std::string> kUserCreationByAdminFields{std::begin(internal::kUserCreationByAdminArray), std::end(internal::kUserCreationByAdminArray)};
-
-const std::vector<std::string> kRoomFields{std::begin(internal::kRoomFieldsArray), std::end(internal::kRoomFieldsArray)};
-const std::vector<std::string> kRoomCreationFields{std::begin(internal::kRoomCreationFieldsArray), std::end(internal::kRoomCreationFieldsArray)};
-const std::vector<std::string> kRoomInfoFields{std::begin(internal::kRoomInfoFieldsArray), std::end(internal::kRoomInfoFieldsArray)};
+const std::vector<std::string> kUserUpdateByAdminFields{std::begin(internal::kUserUpdateByAdminFieldsArray),
+                                                        std::end(internal::kUserUpdateByAdminFieldsArray)};
 
 const std::vector<std::string> kCommonRoomsViewFields{std::begin(internal::kCommonRoomsViewFieldsArray), std::end(internal::kCommonRoomsViewFieldsArray)};
 const std::vector<std::string> kCommonRoomsViewResultFields{std::begin(internal::kCommonRoomsViewResultFieldsArray), std::end(internal::kCommonRoomsViewResultFieldsArray)};
-
-const std::vector<std::string> kJoinedRoomsViewFields{std::begin(internal::kJoinedRoomsViewFieldsArray), std::end(internal::kJoinedRoomsViewFieldsArray)};
-const std::vector<std::string> kJoinedRoomsViewResultFields{std::begin(internal::kJoinedRoomsViewResultFieldsArray), std::end(internal::kJoinedRoomsViewResultFieldsArray)};
 } // namespace server::models

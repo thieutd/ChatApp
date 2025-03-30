@@ -377,6 +377,11 @@
             "dependencies": []
         }
     ],
-    //custom_config: custom configuration for users. This object can be get by the app().getCustomConfig() method. 
-    "custom_config": {}
+    //custom_config: custom configuration for users. This object can be get by the app().getCustomConfig() method.
+  "custom_config": {
+    "express_server": {
+      "host": "http://localhost:3000",
+      "api_key": "a1487df39d102a5d6d41cf77c44da23b2a0f2617c033d3e3a57c9d97061d52f4"
+    }
+  }
 }

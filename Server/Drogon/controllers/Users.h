@@ -20,10 +20,10 @@ class Users : public HttpController<Users>, public RestfulController
     ADD_METHOD_TO(Users::GetCurrent, "/users/me", "AuthenticationCoroFilter", Get, Options);
     ADD_METHOD_TO(Users::GetList, "/users", "AuthenticationCoroFilter", Get, Options);
 
-    // ADD_METHOD_TO(Users::UpdateOne, "/users/{id}", "AuthenticationCoroFilter", Put, Options);
-    // ADD_METHOD_TO(Users::UpdateCurrent, "/users/me", "AuthenticationCoroFilter", Put, Options);
+    ADD_METHOD_TO(Users::UpdateOne, "/users/{id}", "AuthenticationCoroFilter", "AdminCoroFilter", Patch, Options);
+    ADD_METHOD_TO(Users::UpdateCurrent, "/users/me", "AuthenticationCoroFilter", Put, Options);
 
-    // ADD_METHOD_TO(Users::DeleteOne, "/users/{id}", "AuthenticationCoroFilter", Delete, Options);
+    ADD_METHOD_TO(Users::DeleteOne, "/users/{id}", "AuthenticationCoroFilter", Delete, Options);
     METHOD_LIST_END
 
     Users();
