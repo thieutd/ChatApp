@@ -18,6 +18,9 @@
   <property name="windowTitle">
    <string>Authentication</string>
   </property>
+  <property name="windowIcon">
+   <iconset theme="QIcon::ThemeIcon::UserAvailable"/>
+  </property>
   <property name="styleSheet">
    <string notr="true">QLineEdit, QComboBox {
 	padding-left: 8px;
@@ -84,7 +87,7 @@
            <item>
             <widget class="QLineEdit" name="uriAuthorityLineEdit">
              <property name="text">
-              <string>localhost</string>
+              <string notr="true">localhost</string>
              </property>
              <property name="alignment">
               <set>Qt::AlignmentFlag::AlignLeading|Qt::AlignmentFlag::AlignLeft|Qt::AlignmentFlag::AlignVCenter</set>

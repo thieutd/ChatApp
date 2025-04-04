@@ -30,6 +30,8 @@ Task<HttpResponsePtr> ExpressProxy::Forward(HttpRequestPtr req)
     {
         auto result = co_await client->sendRequestCoro(std::move(req));
         auto response = HttpResponse::newHttpResponse();
+        response->setStatusCode(result->statusCode());
+        response->setContentTypeCode(result->contentType());
         response->setBody(std::string{result->body()});
 
         co_return response;

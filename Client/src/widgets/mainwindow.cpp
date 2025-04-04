@@ -2,17 +2,21 @@
 #include "./ui_mainwindow.h"
 #include "appsettings.h"
 #include "widgets/messagedelegate.h"
+#include "ClientModels_all_include.model_view.gen.h"
 
 #include <QStandardItemModel>
 #include <QThread>
 #include <QTimer>
 #include <QUuid>
+#include <QMessageBox>
+#include <QFileDialog>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
     , authenticated(false)
 {
+    ChangeLanguage(AppSettings::getInstance().getLanguage());
     ui->setupUi(this);
     ui->messageListView->setModel(&model);
     updateAuthState(authenticated);
@@ -50,6 +54,15 @@ void MainWindow::onMessageReceived(const QString &message, const UserIdType &use
     insertMessage(message, userId);
 }
 
+void MainWindow::changeEvent(QEvent *event)
+{
+    if (event->type() == QEvent::LanguageChange) {
+        ui->retranslateUi(this);
+    }
+
+    QMainWindow::changeEvent(event);
+}
+
 // void MainWindow::onMessageSent(const QUuid &messageId) {}
 
 // void MainWindow::onMessageDelivered(const QUuid &messageId) {}
@@ -58,6 +71,14 @@ void MainWindow::updateAuthState(bool isAuthenticated)
 {
     authenticated = isAuthenticated;
     ui->sendMessagePushButton->setEnabled(isAuthenticated);
+    ui->fileAddButton->setEnabled(isAuthenticated);
+    if (!isAuthenticated) {
+        ui->sendMessagePushButton->setToolTip(tr("Please authenticate first"));
+        ui->fileAddButton->setToolTip(tr("Please authenticate first"));
+    } else {
+        ui->sendMessagePushButton->setToolTip(tr("Send message"));
+        ui->fileAddButton->setToolTip(tr("Add file"));
+    }
 
     if (isAuthenticated) {
         userId = AppSettings::getInstance().getUserId();
@@ -68,8 +89,10 @@ void MainWindow::updateAuthState(bool isAuthenticated)
             loop.exec();
             userId = AppSettings::getInstance().getUserId();
         }
-        MessageDelegate *delegate = new MessageDelegate(*userId, this);
-        ui->messageListView->setItemDelegate(delegate);
+        // // MessageDelegate *delegate = new MessageDelegate(*userId, this);
+        // model_view::User_model userModel;
+        // userModel.qxFetchAll();
+        // ui->messageListView->setItemDelegate(userModel);
     }
 }
 
@@ -100,6 +123,32 @@ void MainWindow::insertMessage(const QString &message, const UserIdType &userId)
     model.appendRow(item);
 }
 
+void MainWindow::ChangeLanguage(QLocale::Language language)
+{
+    switch (language) {
+        using enum QLocale::Language;
+    case English: {
+        qApp->removeTranslator(&translator);
+        bool result = translator.load(":/translations/ChatClient_en_US.qm");
+        Q_ASSERT(result && "Failed to load translator");
+        qApp->installTranslator(&translator);
+        AppSettings::getInstance().setLanguage(English);
+        break;
+    }
+    case Vietnamese: {
+        qApp->removeTranslator(&translator);
+        bool result = translator.load(":/translations/ChatClient_vi_VN.qm");
+        Q_ASSERT(result && "Failed to load translator");
+        qApp->installTranslator(&translator);
+        AppSettings::getInstance().setLanguage(Vietnamese);
+        break;
+    }
+    default: {
+        Q_ASSERT(true && "Invalid language");
+    }
+    }
+}
+
 void MainWindow::on_actionAbout_triggered()
 {
     qApp->aboutQt();
@@ -122,6 +171,9 @@ void MainWindow::on_actionExit_triggered()
 
 void MainWindow::on_sendMessagePushButton_clicked()
 {
+    if (!ui->sendMessagePushButton->isEnabled()) {
+        QMessageBox::warning(this, tr("Not Authenticated"), tr("You are not authenticated"));
+    }
     sendMessage();
 }
 
@@ -129,3 +181,20 @@ void MainWindow::on_messageLineEdit_returnPressed()
 {
     sendMessage();
 }
+
+void MainWindow::on_actionEnglish_triggered()
+{
+    ChangeLanguage(QLocale::Language::English);
+}
+
+void MainWindow::on_actionVietnamese_triggered()
+{
+    ChangeLanguage(QLocale::Language::Vietnamese);
+}
+
+
+void MainWindow::on_fileAddButton_clicked()
+{
+    QString fileName = QFileDialog::getOpenFileName(this, tr("Open File"), QString(), "Images (*.png *.xpm *.jpg);;Text files (*.txt);;XML files (*.xml)");
+}
+

@@ -1,0 +1,15 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "C/C++ Runner: Debug Session",
+      "type": "cppvsdbg",
+      "request": "launch",
+      "args": [],
+      "stopAtEntry": false,
+      "console": "externalTerminal",
+      "cwd": "c:/Users/dangt/Downloads/ChatApp/Client/build/Desktop_Qt_6_9_0_MSVC2022_64bit_NinjaGen-Debug/ChatClient_autogen/3YJK5W5UP7",
+      "program": "c:/Users/dangt/Downloads/ChatApp/Client/build/Desktop_Qt_6_9_0_MSVC2022_64bit_NinjaGen-Debug/ChatClient_autogen/3YJK5W5UP7/build/Debug/outDebug"
+    }
+  ]
+}

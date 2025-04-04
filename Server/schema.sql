@@ -69,17 +69,17 @@ ADD CONSTRAINT fk_room_last_message
 FOREIGN KEY (last_message_id) REFERENCES "message"(id);
 
 -- -- Media Attachment Table
--- CREATE TABLE IF NOT EXISTS "media_attachment"
--- (
---     id SERIAL PRIMARY KEY,
---     message_id INT NOT NULL REFERENCES "message"(id),
---     media_type media_type NOT NULL,
---     file_name VARCHAR(255) NOT NULL,
---     file_size BIGINT NOT NULL,
---     url VARCHAR(1024) NOT NULL,
---     mime_type VARCHAR(127) NOT NULL,
---     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
--- );
+CREATE TABLE IF NOT EXISTS "media_attachment"
+(
+    id SERIAL PRIMARY KEY,
+    message_id INT NOT NULL REFERENCES "message"(id),
+    media_type media_type NOT NULL,
+    file_name VARCHAR(255) NOT NULL,
+    file_size BIGINT NOT NULL,
+    url VARCHAR(1024) NOT NULL,
+    mime_type VARCHAR(127) NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
 
 -- -- Message Read Receipt Table
 -- CREATE TABLE IF NOT EXISTS "message_read_receipt"

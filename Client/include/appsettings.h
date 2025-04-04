@@ -1,8 +1,9 @@
 #ifndef APPSETTINGS_H
 #define APPSETTINGS_H
 
-#include <shared_mutex>
 #include <QSettings>
+#include <QLocale>
+#include <shared_mutex>
 
 class AppSettings
 {
@@ -34,6 +35,9 @@ public:
     std::optional<QVariant> getTempValue(const QString &key) const;
     template<typename T>
     std::optional<T> getTempValue(const QString &key) const;
+
+    void setLanguage(QLocale::Language language);
+    QLocale::Language getLanguage();
 
     void clear();
     void commit();

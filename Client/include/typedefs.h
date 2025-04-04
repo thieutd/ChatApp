@@ -8,7 +8,9 @@
 #include <QRestReply>
 #include <QSqlError>
 
-using UserIdType = quint64;
+#include <ClientModels_all_include.model_view.gen.h>
+
+using UserIdType = std::invoke_result_t<decltype(&User::getid), User>;
 
 /*
  * 

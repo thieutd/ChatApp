@@ -11,17 +11,23 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 find_package(Qt6 REQUIRED COMPONENTS Widgets LinguistTools Network StateMachine Concurrent Sql WebSockets)
 
-set(TS_FILES resources/ChatClient_vi_VN.ts)
-qt_create_translation(QM_FILES ${CMAKE_SOURCE_DIR} ${TS_FILES})
+set(TS_FILES
+    resources/translations/ChatClient_vi_VN.ts
+    resources/translations/ChatClient_en_US.ts
+)
+qt_add_translation(QM_FILES ${TS_FILES})
 
 file(GLOB SOURCE_FILES "src/*.cpp" "src/restclients/*.cpp" "src/widgets/*.cpp")
 file(GLOB HEADER_FILES "include/*.h" "include/restclients/*.h" "include/widgets/*.h")
+
+qt_add_resources(RESOURCE_FILES resources/resources.qrc)
+
 qt_add_executable(${PROJECT_NAME}
     MANUAL_FINALIZATION
     ${HEADER_FILES}
     ${SOURCE_FILES}
     ${TS_FILES}
-    resources/resources.qrc
+    ${RESOURCE_FILES}
 )
 
 file(GLOB UI_FILES "ui/*.ui")
@@ -53,5 +59,6 @@ install(TARGETS ${PROJECT_NAME}
     LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
     RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
 )
+install(FILES ${QM_FILES} DESTINATION ${CMAKE_INSTALL_PREFIX}/translations)
 
 qt_finalize_executable(${PROJECT_NAME})

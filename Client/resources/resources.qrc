@@ -1,5 +1,11 @@
 <RCC>
     <qresource prefix="/">
         <file>schemas/sqlite_db_create.sql</file>
+        <file>icons/gb.svg</file>
+        <file>icons/vn.svg</file>
+        <file>icons/send.svg</file>
+        <file>translations/ChatClient_en_US.qm</file>
+        <file>translations/ChatClient_vi_VN.qm</file>
+        <file>icons/add_file.svg</file>
     </qresource>
 </RCC>

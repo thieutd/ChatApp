@@ -127,6 +127,24 @@ std::optional<QVariant> AppSettings::getTempValue(const QString &key) const
     return std::nullopt;
 }
 
+void AppSettings::setLanguage(QLocale::Language language)
+{
+    std::unique_lock lock(mutex);
+    settings.setValue("language", language);
+}
+
+QLocale::Language AppSettings::getLanguage()
+{
+    {
+        std::shared_lock lock(mutex);
+        if (settings.contains("language")) {
+            return static_cast<QLocale::Language>(settings.value("language").toInt());
+        }
+    }
+    setLanguage(QLocale::Language::English);
+    return QLocale::Language::English;
+}
+
 void AppSettings::clear()
 {
     std::unique_lock lock(mutex);

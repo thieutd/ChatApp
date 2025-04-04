@@ -18,7 +18,7 @@ SqliteAsyncDatabase::SqliteAsyncDatabase(QObject *parent)
 SqliteAsyncDatabase::~SqliteAsyncDatabase()
 {
     qDebug() << QThread::currentThread() << "SqliteAsyncDatabase::~SqliteAsyncDatabase()";
-    close();
+    SqliteAsyncDatabase::close();
     threadPool->waitForDone();
 }
 
